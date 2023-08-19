@@ -1,73 +1,62 @@
 ## go-handson
 
 golang練習用のリポジトリになります。
+このリポジトリではgolangの基本的なDDDが学べます。
 
-## 準備
+handler (APIのリクエストを受ける)
+↓
+usecase (handlerから受けたリクエストをmodelに変換)
+↓
+repository (datasourceの関数指定)
+↓
+datasource (modelの永続化)
+
+## 流れ
+
+1. postgresqlとgolangのコンテナをdockerで起動します。
+2. curlコマンドを叩いて、ユーザーの作成を行います。
+3. postgresqlのコンテナに入ってSQLを実行してテーブルにユーザーが追加されたかどうか確認する。
+
+## 動作確認
+
+リポジトリをクローンします。
 
 ```shell
 gh repo clone github.com/FJC-OMUSUBI/go-handson
 ```
 
-## 実行
+環境変数をコピーします。
 
-### 1. [Effective Go](http://go.shibu.jp/)
-
-- cmd/tutorial
-
-```shell
-
-go run cmd/tutorial/main.go
+```code
+cp .env.sample .env
 ```
 
-### 2. [Standard Go Project Layout](https://github.com/golang-standards/project-layout/blob/master/README_ja.md)
+postgresqlとgolangのコンテナをコマンド一発で起動します。
 
-- cmd/standard
-
-```shell
-go run cmd/standard/main.go
+```code
+docker-compose up -d
 ```
 
-### 3. DB
+curlコマンドを実行してユーザー作成APIを叩きます。
 
-- [Pgx](https://github.com/jackc/pgx)
-  - cmd/pgx
-- [Bun](https://bun.uptrace.dev/)
-  - cmd/bun
-
-```shell
-準備中
+```code
+curl -X POST -H "Content-Type: application/json" -d '{"name":"テスト0", "email":"test@test.com", "password":"123456"}' localhost:8080/api/v1/users
 ```
 
-### 4. HTTPサーバー
+データが追加されたことを確認します。
 
-- [net/http mux](https://pkg.go.dev/net/http)
-  - cmd/muxpgx
-- [Gin](https://gin-gonic.com/ja/docs/)
-  - cmd/ginpgx
-
-```shell
-準備中
+```sql
+psql "postgresql://user:password@localhost:54321/user_app?sslmode=disable"
 ```
 
-### 5. CI/CD (Continuous Integration/Continuous Delivery)
+pgcliがインストールされていない場合、DBEaverにて下記設定を入れてDBに接続します。
 
-#### CI
+ユーザー名: user
+パスワード： password
+DB： user_app
+ポート: 54321
+ホスト名: localhost
 
-- [GitHub Actions](https://docs.github.com/ja/actions)
-- [GitHub Actions - composite action](https://docs.github.com/ja/actions/creating-actions/creating-a-composite-action)
-- [Buf](https://docs.buf.build/ci-cd/github-actions)
-- [golangci-lint](https://golangci-lint.run/)
-- [govulncheck](https://github.com/golang/vuln)
-
-#### CD
-
-- [Semantic Versioning Release Action](https://github.com/marketplace/actions/create-new-semantic-version)
-- [go-winres](https://github.com/tc-hib/go-winres)
-- [UPX](https://upx.github.io/)
-- [osslsigncode](https://github.com/mtrojnar/osslsigncode)
-- [GoReleaser](https://goreleaser.com/)
-- [GitHub Release](https://docs.github.com/ja/repositories/releasing-projects-on-github)
-- [ko](https://ko.build/)
-- [GitHub Packages](https://docs.github.com/ja/packages)
-- [Google Artifact Registry](https://cloud.google.com/artifact-registry?hl=ja)
-- [Google Cloud Run](https://cloud.google.com/run?hl=ja)
+```sql
+select * from users;
+```
