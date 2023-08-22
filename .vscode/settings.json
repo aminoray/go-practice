@@ -40,4 +40,5 @@
         "options": "",
         "transform": "camelcase"
     },
+    "nuxt.isNuxtApp": false,
 }

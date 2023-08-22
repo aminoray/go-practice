@@ -3,13 +3,13 @@
 golang練習用のリポジトリになります。
 このリポジトリではgolangの基本的なDDDが学べます。
 
-handler (APIのリクエストを受ける)
-↓
-usecase (handlerから受けたリクエストをmodelに変換)
-↓
-repository (datasourceの関数指定)
-↓
-datasource (modelの永続化)
+handler (APIのリクエストを受ける)<br>
+↓<br>
+usecase (handlerから受けたリクエストをmodelに変換)<br>
+↓<br>
+repository (datasourceの関数指定)<br>
+↓<br>
+datasource (modelの永続化)<br>
 
 ## 流れ
 
@@ -59,4 +59,59 @@ DB： user_app
 
 ```sql
 select * from users;
+```
+
+********
+
+## ディレクトリ構成について
+
+```
+go-handson
+|- docker/local
+|- |- go
+|- |- |- Dockerfile
+|- |- postgres
+|- |- |- docker-entrypoint-initdb.d
+|- |- |- |- create-users.sql
+|- |- |- Dockerfile
+|- .vscode
+|- |- extensions.json
+|- |- launch.json
+|- |- settings.json
+|- internals
+|- |- config
+|- |- |- postgres.go
+|- |- |- transaction.go
+|- |- domain
+|- |- |- model
+|- |- |- |- user.go
+|- |- |- repository
+|- |- |- |- user.go
+|- |- infrastructure
+|- |- |- datasource
+|- |- |- |- user_read.go
+|- |- |- |- user_write.go
+|- |- |- |- user.go
+|- |- interface
+|- |- |- handler ☆ (APIのリクエストを受ける)
+|- |- |- |- api
+|- |- |- |- |- router.go
+|- |- |- |- |- user_request.go
+|- |- |- |- |- user.go
+|- |- usecase ☆ (handlerから受けたリクエストをmodelに変換)
+|- |- |- user.go
+|- |- go.mod
+|- |- go.sum
+|- scripts
+|- |- mod_tidy.sh
+|- services
+|- |- go-api
+|- |- |- cmd
+|- |- |- |- .air.toml
+|- |- |- |- main.go
+|- |- |- go.mod
+|- .gitignore
+|- docker-compose.yml
+|- Makefile
+|- README.md
 ```
